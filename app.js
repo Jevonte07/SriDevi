@@ -449,10 +449,20 @@ class FlowerBloomApp {
         // --- Ambient glow behind flower ---
         const glowR = (60 + bloom * 120) * adjustedScale;
         if (bloom > 0.02) {
-            const glow = ctx.createRadialGradient(0, -glowR * 0.4, 0, 0, -glowR * 0.4, glowR);
-            glow.addColorStop(0, `rgba(255, 80, 130, ${0.4 * bloom})`);
-            glow.addColorStop(0.5, `rgba(255, 50, 100, ${0.2 * bloom})`);
-            glow.addColorStop(1, 'rgba(255, 30, 70, 0)');
+            const glow = ctx.createRadialGradient(
+                0,
+                -glowR * 0.4,
+                0,
+                0,
+                -glowR * 0.4,
+                glowR
+            );
+
+            // Soft Sakura Pink Glow
+            glow.addColorStop(0, `rgba(255,215,230,${0.20 * bloom})`);
+            glow.addColorStop(0.45, `rgba(255,180,215,${0.12 * bloom})`);
+            glow.addColorStop(0.80, `rgba(255,150,205,${0.05 * bloom})`);
+            glow.addColorStop(1, "rgba(255,150,205,0)");
             ctx.fillStyle = glow;
             ctx.beginPath();
             ctx.arc(0, -glowR * 0.4, glowR, 0, Math.PI * 2);
@@ -460,9 +470,10 @@ class FlowerBloomApp {
         }
 
         // Base color definitions (tulip uses beautiful pink/coral/yellow tones)
-        const hue = 345; // Pink/crimson base
-        const sat = 85;
-        const light = 55;
+        // Natural Yellow Tulip
+            const hue = 50;
+            const sat = 82;
+            const light = 58;
 
         // --- Tulip Petal Layers ---
         // Back/outer layer (drawn first)
@@ -498,7 +509,7 @@ class FlowerBloomApp {
             ctx.save();
             ctx.shadowBlur = 0;
             // Center pistil (greenish yellow)
-            ctx.fillStyle = `rgba(180, 220, 100, ${bloom})`;
+            ctx.fillStyle = "#7e8d2b";
             ctx.beginPath();
             ctx.arc(0, -maxPetalLen * 0.2, 5 * adjustedScale, 0, Math.PI * 2);
             ctx.fill();
@@ -520,7 +531,7 @@ class FlowerBloomApp {
                 ctx.stroke();
 
                 // anther
-                ctx.fillStyle = `rgba(255, 235, 120, ${bloom})`;
+                ctx.fillStyle = "#4a3416";
                 ctx.beginPath();
                 ctx.arc(sx, sy, 2.5 * adjustedScale, 0, Math.PI * 2);
                 ctx.fill();
@@ -547,15 +558,29 @@ class FlowerBloomApp {
 
         // Gradient from base (darker/coral) to top (bright pink/yellow)
         const grad = ctx.createLinearGradient(0, 0, 0, -length);
-        grad.addColorStop(0, `hsla(${hue + 25}, ${sat}%, ${light - 8}%, 0.9)`);
-        grad.addColorStop(0.4, `hsla(${hue}, ${sat}%, ${light}%, 0.85)`);
-        grad.addColorStop(0.85, `hsla(${hue - 10}, ${sat + 10}%, ${light + 10}%, 0.85)`);
-        grad.addColorStop(1, `hsla(${hue - 20}, ${sat + 15}%, ${light + 18}%, 0.95)`);
+
+        // Bottom of petal (golden orange)
+        grad.addColorStop(0.00, "#8c6500");
+
+        // Lower petal
+        grad.addColorStop(0.18, "#b68400");
+
+        // Middle
+        grad.addColorStop(0.40, "#dca700");
+
+        // Bright yellow
+        grad.addColorStop(0.65, "#f4d43a");
+
+        // Soft lemon
+        grad.addColorStop(0.88, "#fff08d");
+
+        // Sunlit edge
+        grad.addColorStop(1.00, "#fffde4");
 
         ctx.fillStyle = grad;
         // Outer glow
-        ctx.shadowBlur = 12 + bloom * 18;
-        ctx.shadowColor = `hsla(${hue}, 100%, 65%, ${0.25 + bloom * 0.4})`;
+        ctx.shadowBlur = 3 + bloom * 3;
+        ctx.shadowColor = "rgba(255,205,70,0.12)";
 
         // Tulip petal shape pointing straight up (-Y direction)
         ctx.beginPath();
@@ -572,9 +597,25 @@ class FlowerBloomApp {
         );
         ctx.fill();
 
+        // Soft highlight like sunlight on petals
+        const shine = ctx.createLinearGradient(
+            -width * 0.3,
+            -length * 0.3,
+            width * 0.5,
+            -length
+        );
+
+        shine.addColorStop(0, "rgba(255,255,255,0)");
+        shine.addColorStop(0.55, "rgba(255,255,220,0.15)");
+        shine.addColorStop(0.90, "rgba(255,255,180,0.35)");
+        shine.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.fillStyle = shine;
+        ctx.fill();
+
         // Subtle petal vein
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = `hsla(${hue + 15}, ${sat}%, ${light + 15}%, 0.25)`;
+        ctx.strokeStyle = "rgba(255,250,200,0.30)";
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, 0);
